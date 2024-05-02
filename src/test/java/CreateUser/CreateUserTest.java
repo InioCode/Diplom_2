@@ -1,6 +1,7 @@
 package CreateUser;
 
 import com.google.gson.Gson;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,6 +33,7 @@ public class CreateUserTest {
     //    "password": "Password",
     //    "name": "User"
 
+    @DisplayName("Создание нового пользователя")
     @Test
     public void createUniqueUser(){
         RestAssured
@@ -42,6 +44,7 @@ public class CreateUserTest {
                 .post("/api/auth/register").then().log().all().statusCode(200);
     }
 
+    @DisplayName("Создание нового пользователя с уже зарегестрированной почтой возвращает код 403")
     @Test
     public void createNonUniqueUserReturn403(){
         RestAssured
@@ -52,6 +55,7 @@ public class CreateUserTest {
                 .post("/api/auth/register").then().log().all().statusCode(403);
     }
 
+    @DisplayName("Создание пользователя без одного поля возвращает код 403")
     @Test
     public void createUserWithoutOneFieldReturn403(){
         String UserBodyWithoutOneField = "{\"email\":\"test@mail.ru\",\"password\":\"User\"}";

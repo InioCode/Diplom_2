@@ -2,6 +2,7 @@ package CreateOrder;
 
 import LoginUser.LoginUserBodyData;
 import LoginUser.SuccessLoginUserData;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,7 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateOrder {
+public class CreateOrderTest {
     private List<String> ingredients = new ArrayList<>();
     private List<String> wrongIngredients = new ArrayList<>();
     private CreateOrderBodyData createOrderBody = new CreateOrderBodyData();
@@ -39,6 +40,7 @@ public class CreateOrder {
         login = new LoginUserBodyData(email, password);
     }
 
+    @DisplayName("Создание заказа без аутентификации")
     @Test
     public void createOrderWithoutAuth(){
         RestAssured
@@ -51,6 +53,7 @@ public class CreateOrder {
 
     }
 
+    @DisplayName("Создание заказа после пройденой аутентификации")
     @Test
     public void createOrderWithAuth(){
         userData = RestAssured.given()
@@ -73,6 +76,7 @@ public class CreateOrder {
                 .statusCode(200);
     }
 
+    @DisplayName("Создание заказа без ингридиентов возвращает ошибку")
     @Test
     public void createOrderWithoutIngredients(){
         CreateOrderError error =  RestAssured
@@ -86,6 +90,7 @@ public class CreateOrder {
 
     }
 
+    @DisplayName("Создание заказа с несуществущим хэшем ингридеента возвращает код 500")
     @Test
     public void createOrderWithWrongHashIngredients(){
         RestAssured

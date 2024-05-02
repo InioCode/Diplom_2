@@ -2,6 +2,7 @@ package ChangeUserData;
 
 import LoginUser.LoginUserBodyData;
 import LoginUser.SuccessLoginUserData;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +26,7 @@ public class ChangeUserDataTest {
 
     }
 
+    @DisplayName("Изменение имени когда аутентификация пройдена")
     @Test
     public void changeNameWithAuth(){
         userData = RestAssured.given()
@@ -46,6 +48,7 @@ public class ChangeUserDataTest {
                 .log().all().statusCode(200);
     }
 
+   @DisplayName("Изменение адреса почты когда аутентификация пройдена")
     @Test
     public void changeEmailWithAuth(){
         userData = RestAssured.given()
@@ -67,6 +70,7 @@ public class ChangeUserDataTest {
                 .log().all().statusCode(200);
     }
 
+    @DisplayName("Изменение данных без прохождения аутентификации возвращает ошибку")
     @Test
     public void changeDataWithoutAuth(){
         ChangeUserError error= RestAssured.given().log().all()
