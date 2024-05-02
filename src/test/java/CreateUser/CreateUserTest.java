@@ -1,8 +1,12 @@
 package CreateUser;
 
+import LoginUser.SuccessLoginUserData;
 import com.google.gson.Gson;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +20,8 @@ public class CreateUserTest {
     private String email;
     private String userName;
     private String password;
+    private String accessToken;
+
 
 
     @Before
@@ -24,24 +30,35 @@ public class CreateUserTest {
         userName = "User";
         password = "Password";
         System.out.println(email);
+
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
         bodyCreateUser = new CreateUserBodyData(email, password, userName);
         bodyNonUniqueUser = new CreateUserBodyData("test236@mail.ru", password, userName);
     }
 
-    //    "email": "test236@mail.ru",
-    //    "password": "Password",
-    //    "name": "User"
+    @After
+    public void tearDown() {
+        accessToken = accessToken.substring(7);
+
+        RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
+                .delete("https://stellarburgers.nomoreparties.site/api/auth/user");
+    }
 
     @DisplayName("Создание нового пользователя")
     @Test
     public void createUniqueUser(){
-        RestAssured
+        Response response = RestAssured
                 .given().log().all()
                 .header("Content-type", "application/json" )
                 .body(bodyCreateUser)
                 .and()
-                .post("/api/auth/register").then().log().all().statusCode(200);
+                .post("/api/auth/register");
+        response.then().statusCode(200);
+
+        accessToken = response.as(SuccessRegisterUserData.class).getAccessToken();
+
     }
 
     @DisplayName("Создание нового пользователя с уже зарегестрированной почтой возвращает код 403")

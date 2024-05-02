@@ -4,9 +4,7 @@ import LoginUser.LoginUserBodyData;
 import LoginUser.SuccessLoginUserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 public class ChangeUserDataTest {
 
@@ -22,8 +20,6 @@ public class ChangeUserDataTest {
         password = "Password";
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
         login = new LoginUserBodyData(email, password);
-
-
     }
 
     @DisplayName("Изменение имени когда аутентификация пройдена")
