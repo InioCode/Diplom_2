@@ -1,21 +1,21 @@
-package LoginUser;
+package stellarburgers.createuser;
 
 import java.util.List;
 
-public class SuccessLoginUserData {
+public class SuccessRegisterUserData {
     private String success;
+    private List<UserData> UserData;
     private String accessToken;
     private String refreshToken;
-    private List<CreateUser.UserData> userData;
 
-    public SuccessLoginUserData(String success, String accessToken, String refreshToken, List<CreateUser.UserData> userData) {
+    public SuccessRegisterUserData(String success, List<stellarburgers.createuser.UserData> userData, String accessToken, String refreshToken) {
         this.success = success;
-        this.userData = userData;
+        UserData = userData;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 
-    public SuccessLoginUserData() {
+    public SuccessRegisterUserData() {
     }
 
     public String getSuccess() {
@@ -26,12 +26,12 @@ public class SuccessLoginUserData {
         this.success = success;
     }
 
-    public List<CreateUser.UserData> getUserData() {
-        return userData;
+    public List<stellarburgers.createuser.UserData> getUserData() {
+        return UserData;
     }
 
-    public void setUserData(List<CreateUser.UserData> userData) {
-        this.userData = userData;
+    public void setUserData(List<stellarburgers.createuser.UserData> userData) {
+        UserData = userData;
     }
 
     public String getAccessToken() {

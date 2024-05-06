@@ -1,7 +1,10 @@
-package CreateOrder;
+package stellarburgers.createorder;
 
-import LoginUser.LoginUserBodyData;
-import LoginUser.SuccessLoginUserData;
+import org.junit.After;
+import stellarburgers.createuser.CreateUserBodyData;
+import stellarburgers.createuser.SuccessRegisterUserData;
+import stellarburgers.loginuser.LoginUserBodyData;
+import stellarburgers.loginuser.SuccessLoginUserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Assert;
@@ -10,6 +13,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static stellarburgers.UrlConstants.BASE_URL;
 
 public class CreateOrderTest {
     private List<String> ingredients = new ArrayList<>();
@@ -25,7 +31,7 @@ public class CreateOrderTest {
 
     @Before
     public void setUp(){
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
+        RestAssured.baseURI = BASE_URL;
 
         ingredients.add("61c0c5a71d1f82001bdaaa70");
         ingredients.add("61c0c5a71d1f82001bdaaa6d");
@@ -35,9 +41,29 @@ public class CreateOrderTest {
         wrongIngredients.add("61c0c5a71d1f82001bdaa");
         createOrderBodyWithWrongIngredients.setIngredients(wrongIngredients);
 
-        email = "test236@mail.ru";
+        email = "test" + new Random().nextInt(1000) +"@mail.ru";
         password = "Password";
+
+        CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
+        accessToken = RestAssured
+                .given().log().all()
+                .header("Content-type", "application/json" )
+                .body(bodyCreateUser)
+                .and()
+                .post("/api/auth/register")
+                .as(SuccessRegisterUserData.class)
+                .getAccessToken()
+                .substring(7);
+
         login = new LoginUserBodyData(email, password);
+    }
+
+    @After
+    public void tearDown(){
+        RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
+                .delete("https://stellarburgers.nomoreparties.site/api/auth/user");
     }
 
     @DisplayName("Создание заказа без аутентификации")
@@ -63,7 +89,7 @@ public class CreateOrderTest {
                 .and()
                 .post("/api/auth/login").as(SuccessLoginUserData.class);
 
-        accessToken = userData.getAccessToken().substring(7);
+        //accessToken = userData.getAccessToken().substring(7);
 
         RestAssured
                 .given().log().all()

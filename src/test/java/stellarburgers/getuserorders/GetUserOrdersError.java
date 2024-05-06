@@ -1,15 +1,15 @@
-package CreateUser;
+package stellarburgers.getuserorders;
 
-public class CreateUserError {
+public class GetUserOrdersError {
     private String success;
     private String message;
 
-    public CreateUserError(String success, String message) {
+    public GetUserOrdersError(String success, String message) {
         this.success = success;
         this.message = message;
     }
 
-    public CreateUserError() {
+    public GetUserOrdersError() {
     }
 
     public String getSuccess() {

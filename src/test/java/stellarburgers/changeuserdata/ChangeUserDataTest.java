@@ -1,14 +1,22 @@
-package ChangeUserData;
+package stellarburgers.changeuserdata;
 
-import LoginUser.LoginUserBodyData;
-import LoginUser.SuccessLoginUserData;
+import io.restassured.response.Response;
+import stellarburgers.createuser.CreateUserBodyData;
+import stellarburgers.createuser.SuccessRegisterUserData;
+import stellarburgers.loginuser.LoginUserBodyData;
+import stellarburgers.loginuser.SuccessLoginUserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.*;
 
+import java.util.Random;
+
+import static stellarburgers.UrlConstants.BASE_URL;
+
 public class ChangeUserDataTest {
 
     private String email;
+    private String emailForChange;
     private String password;
     private LoginUserBodyData login;
     private SuccessLoginUserData userData;
@@ -16,10 +24,34 @@ public class ChangeUserDataTest {
 
     @Before
     public void setUp(){
-        email = "test236@mail.ru";
+        int randInt = new Random().nextInt(1000);
+        email = "test" + randInt + "@mail.ru";
+        emailForChange = "change" + randInt + "@mail.ru";
         password = "Password";
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
+        RestAssured.baseURI = BASE_URL;
+
+        CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
+
+        accessToken = RestAssured
+                .given().log().all()
+                .header("Content-type", "application/json" )
+                .body(bodyCreateUser)
+                .and()
+                .post("/api/auth/register")
+                .as(SuccessRegisterUserData.class)
+                .getAccessToken()
+                .substring(7);
+
         login = new LoginUserBodyData(email, password);
+        System.out.println(email);
+    }
+
+    @After
+    public void tearDown(){
+        RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
+                .delete("https://stellarburgers.nomoreparties.site/api/auth/user");
     }
 
     @DisplayName("Изменение имени когда аутентификация пройдена")
@@ -32,7 +64,7 @@ public class ChangeUserDataTest {
                 .and()
                 .post("/api/auth/login").as(SuccessLoginUserData.class);
 
-        accessToken = userData.getAccessToken().substring(7);
+//        accessToken = userData.getAccessToken().substring(7);
 
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
@@ -54,12 +86,12 @@ public class ChangeUserDataTest {
                 .and()
                 .post("/api/auth/login").as(SuccessLoginUserData.class);
 
-        accessToken = userData.getAccessToken().substring(7);
+        //accessToken = userData.getAccessToken().substring(7);
 
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .header("Content-type", "application/json")
-                .body("{\"email\": \"test236@mail.ru\"}")
+                .body("{\"email\": \"" + emailForChange + "\"}")
                 .and()
                 .patch("/api/auth/user")
                 .then()

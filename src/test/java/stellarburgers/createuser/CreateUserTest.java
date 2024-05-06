@@ -1,17 +1,16 @@
-package CreateUser;
+package stellarburgers.createuser;
 
-import LoginUser.SuccessLoginUserData;
-import com.google.gson.Gson;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
+
+import static stellarburgers.UrlConstants.BASE_URL;
 
 public class CreateUserTest {
 
@@ -21,6 +20,7 @@ public class CreateUserTest {
     private String userName;
     private String password;
     private String accessToken;
+    private boolean userCreated = false;
 
 
 
@@ -31,19 +31,18 @@ public class CreateUserTest {
         password = "Password";
         System.out.println(email);
 
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
+        RestAssured.baseURI = BASE_URL;
         bodyCreateUser = new CreateUserBodyData(email, password, userName);
-        bodyNonUniqueUser = new CreateUserBodyData("test236@mail.ru", password, userName);
     }
 
     @After
     public void tearDown() {
-        accessToken = accessToken.substring(7);
-
-        RestAssured.given()
-                .auth()
-                .oauth2(accessToken)
-                .delete("https://stellarburgers.nomoreparties.site/api/auth/user");
+        if (userCreated){
+            RestAssured.given()
+                    .auth()
+                    .oauth2(accessToken)
+                    .delete("https://stellarburgers.nomoreparties.site/api/auth/user");
+        }
     }
 
     @DisplayName("Создание нового пользователя")
@@ -56,18 +55,26 @@ public class CreateUserTest {
                 .and()
                 .post("/api/auth/register");
         response.then().statusCode(200);
-
-        accessToken = response.as(SuccessRegisterUserData.class).getAccessToken();
-
+        userCreated = true;
+        accessToken = response.as(SuccessRegisterUserData.class).getAccessToken().substring(7);
     }
 
     @DisplayName("Создание нового пользователя с уже зарегестрированной почтой возвращает код 403")
     @Test
     public void createNonUniqueUserReturn403(){
+        Response response = RestAssured
+                .given().log().all()
+                .header("Content-type", "application/json" )
+                .body(bodyCreateUser)
+                .and()
+                .post("/api/auth/register");
+        userCreated =true;
+        accessToken = response.as(SuccessRegisterUserData.class).getAccessToken().substring(7);
+
         RestAssured
                 .given().log().all()
                 .header("Content-type", "application/json" )
-                .body(bodyNonUniqueUser)
+                .body(bodyCreateUser)
                 .and()
                 .post("/api/auth/register").then().log().all().statusCode(403);
     }
