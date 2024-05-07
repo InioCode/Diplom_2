@@ -1,4 +1,4 @@
-package stellarburgers.loginuser;
+package client.loginuser;
 
 public class LoginUserBodyData {
     private String email;

@@ -1,6 +1,6 @@
-package stellarburgers.loginuser;
+package client.loginuser;
 
-import stellarburgers.createuser.UserData;
+import client.createuser.UserData;
 
 import java.util.List;
 

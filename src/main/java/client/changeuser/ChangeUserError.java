@@ -1,4 +1,4 @@
-package stellarburgers.changeuserdata;
+package client.changeuser;
 
 public class ChangeUserError {
     private String success;

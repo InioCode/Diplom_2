@@ -1,0 +1,51 @@
+import client.loginuser.LoginUserBodyData;
+import io.restassured.RestAssured;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import client.createuser.CreateUserBodyData;
+import client.createuser.SuccessRegisterUserData;
+
+import java.util.Random;
+
+import static client.DeleteUser.deleteUser;
+import static client.UrlConstants.BASE_URL;
+import static client.createuser.CreateUser.createUser;
+import static client.loginuser.LoginUser.loginUser;
+
+public class LoginUserTest {
+    LoginUserBodyData login;
+    LoginUserBodyData invalidLogin;
+    private String email;
+    private String password;
+    private String accessToken;
+
+    @Before
+    public void setUp(){
+        email = "test" + new Random().nextInt(1000) +"@mail.ru";
+        password = "Password";
+
+        CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
+        accessToken = createUser(bodyCreateUser)
+                .as(SuccessRegisterUserData.class)
+                .getAccessToken()
+                .substring(7);
+
+        invalidLogin = new LoginUserBodyData("InvalidEmail@mail.com", password);
+        login = new LoginUserBodyData(email, password);
+    }
+
+    @After
+    public void tearDown(){
+        deleteUser(accessToken);
+    }
+
+    @Test
+    public void loginUser_success(){
+        loginUser(login).then().log().all().statusCode(200);
+    }
+    @Test
+    public void loginUserWithInvalidUserName(){
+        loginUser(invalidLogin).then().statusCode(401);
+    }
+}

@@ -1,0 +1,67 @@
+import client.changeuser.ChangeUserError;
+import client.createuser.CreateUserBodyData;
+import client.createuser.SuccessRegisterUserData;
+import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
+import org.junit.*;
+
+import java.util.Random;
+
+import static client.DeleteUser.deleteUser;
+import static client.UrlConstants.BASE_URL;
+import static client.changeuser.ChangeUser.*;
+import static client.createuser.CreateUser.createUser;
+
+public class ChangeUserDataTest {
+
+    private String email;
+    private String emailForChange;
+    private String password;
+    private String accessToken;
+
+    @Before
+    public void setUp(){
+        int randInt = new Random().nextInt(1000);
+        email = "test" + randInt + "@mail.ru";
+        emailForChange = "change" + randInt + "@mail.ru";
+        password = "Password";
+
+        CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
+
+        accessToken = createUser(bodyCreateUser)
+                .as(SuccessRegisterUserData.class)
+                .getAccessToken()
+                .substring(7);
+
+        //System.out.println(email);
+    }
+
+    @After
+    public void tearDown(){
+        deleteUser(accessToken);
+    }
+
+    @DisplayName("Изменение имени когда аутентификация пройдена возвращает код 200")
+    @Test
+    public void changeNameWithAuth_return200(){
+        changeUserNameWithAuth(accessToken, "New name")
+                .then()
+                .log().all().statusCode(200);
+    }
+
+   @DisplayName("Изменение адреса почты когда аутентификация пройдена возвращает код 200")
+    @Test
+    public void changeEmailWithAuth_return200(){
+       changeEmailWithAuth(accessToken ,emailForChange)
+                .then()
+                .log().all().statusCode(200);
+    }
+
+    @DisplayName("Изменение данных без прохождения аутентификации возвращает ошибку")
+    @Test
+    public void changeDataWithoutAuth(){
+        ChangeUserError error= changeUserNameWithoutAuth().as(ChangeUserError.class);
+        Assert.assertEquals("false", error.getSuccess());
+        Assert.assertEquals("You should be authorised", error.getMessage());
+    }
+}

@@ -1,4 +1,4 @@
-package stellarburgers.getuserorders;
+package client.getuserorders;
 
 public class GetUserOrdersError {
     private String success;

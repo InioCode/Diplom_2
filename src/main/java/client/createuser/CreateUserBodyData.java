@@ -1,4 +1,4 @@
-package stellarburgers.createuser;
+package client.createuser;
 
 public class CreateUserBodyData {
     private String email;

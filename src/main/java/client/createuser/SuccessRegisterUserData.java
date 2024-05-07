@@ -1,4 +1,4 @@
-package stellarburgers.createuser;
+package client.createuser;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class SuccessRegisterUserData {
     private String accessToken;
     private String refreshToken;
 
-    public SuccessRegisterUserData(String success, List<stellarburgers.createuser.UserData> userData, String accessToken, String refreshToken) {
+    public SuccessRegisterUserData(String success, List<client.createuser.UserData> userData, String accessToken, String refreshToken) {
         this.success = success;
         UserData = userData;
         this.accessToken = accessToken;
@@ -26,11 +26,11 @@ public class SuccessRegisterUserData {
         this.success = success;
     }
 
-    public List<stellarburgers.createuser.UserData> getUserData() {
+    public List<client.createuser.UserData> getUserData() {
         return UserData;
     }
 
-    public void setUserData(List<stellarburgers.createuser.UserData> userData) {
+    public void setUserData(List<client.createuser.UserData> userData) {
         UserData = userData;
     }
 

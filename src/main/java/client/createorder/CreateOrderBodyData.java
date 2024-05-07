@@ -1,4 +1,4 @@
-package stellarburgers.createorder;
+package client.createorder;
 
 import java.util.List;
 
