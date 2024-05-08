@@ -7,4 +7,5 @@ public final class UrlConstants {
     public static final String LOGIN_ENDPOINT = "/api/auth/login";
     public static final String ORDERS_ENDPOINT = "/api/orders";
     public static final String USER_ENDPOINT = "/api/auth/user";
+    public static final String INGREDIENTS_LIST_ENDPOINT = "/api/ingredients";
 }

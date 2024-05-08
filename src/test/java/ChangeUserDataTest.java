@@ -3,13 +3,11 @@ import client.createuser.CreateUserBodyData;
 import client.createuser.SuccessRegisterUserData;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.junit.*;
 
 import java.util.Random;
 
 import static client.DeleteUser.deleteUser;
-import static client.UrlConstants.BASE_URL;
 import static client.changeuser.ChangeUser.*;
 import static client.createuser.CreateUser.createUser;
 
