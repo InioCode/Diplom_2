@@ -11,20 +11,20 @@ import java.util.Random;
 
 import static client.DeleteUser.deleteUser;
 import static client.createuser.CreateUser.createUser;
+import static client.createuser.CreateUser.generateRandomEmail;
 import static client.loginuser.LoginUser.loginUser;
 
 public class LoginUserTest {
     LoginUserBodyData login;
     LoginUserBodyData invalidLogin;
-    private String email;
-    private String password;
     private String accessToken;
 
     @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
-        email = "test" + new Random().nextInt(1000) +"@mail.ru";
-        password = "Password";
+        String email = generateRandomEmail();
+        String invalidMail = generateRandomEmail("InvalidEmail");
+        String password = "Password";
 
         CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
         accessToken = createUser(bodyCreateUser)
@@ -32,7 +32,7 @@ public class LoginUserTest {
                 .getAccessToken()
                 .substring(7);
 
-        invalidLogin = new LoginUserBodyData("InvalidEmail@mail.com", password);
+        invalidLogin = new LoginUserBodyData(invalidMail, password);
         login = new LoginUserBodyData(email, password);
     }
 

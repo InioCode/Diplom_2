@@ -10,6 +10,7 @@ import java.util.Random;
 import static client.DeleteUser.deleteUser;
 import static client.changeuser.ChangeUser.*;
 import static client.createuser.CreateUser.createUser;
+import static client.createuser.CreateUser.generateRandomEmail;
 
 public class ChangeUserDataTest {
 
@@ -22,8 +23,8 @@ public class ChangeUserDataTest {
     @Before
     public void setUp(){
         int randInt = new Random().nextInt(1000);
-        email = "test" + randInt + "@mail.ru";
-        emailForChange = "change" + randInt + "@mail.ru";
+        email = generateRandomEmail();
+        emailForChange = generateRandomEmail("change");
         password = "Password";
 
         CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");

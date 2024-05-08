@@ -13,6 +13,7 @@ import java.util.Random;
 
 import static client.DeleteUser.deleteUser;
 import static client.createuser.CreateUser.createUser;
+import static client.createuser.CreateUser.generateRandomEmail;
 
 public class GetUserOrdersTest {
     private String email;
@@ -22,7 +23,7 @@ public class GetUserOrdersTest {
     @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
-        email = "test" + new Random().nextInt(1000) +"@mail.ru";
+        email = generateRandomEmail();
         password = "Password";
 
         CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");

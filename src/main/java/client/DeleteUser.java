@@ -5,6 +5,7 @@ import io.restassured.RestAssured;
 
 import static client.UrlConstants.BASE_URL;
 import static client.UrlConstants.DELETE_ENDPOINT;
+import static client.createuser.CreateUser.*;
 
 public class DeleteUser {
     @Step("Запрос удаления пользоваетля")
@@ -14,5 +15,7 @@ public class DeleteUser {
                     .auth()
                     .oauth2(accessToken)
                     .delete(DELETE_ENDPOINT);
+
+        userCreated = false;
     }
 }

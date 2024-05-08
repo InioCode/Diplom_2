@@ -16,6 +16,7 @@ import static client.GetIngredients.getIdIngredient;
 import static client.createorder.CreateOrder.createOrderWithAuth;
 import static client.createorder.CreateOrder.createOrderWithoutAuth;
 import static client.createuser.CreateUser.createUser;
+import static client.createuser.CreateUser.generateRandomEmail;
 
 public class CreateOrderTest {
     private final List<String>  ingredients = new ArrayList<>();
@@ -40,7 +41,7 @@ public class CreateOrderTest {
         wrongIngredients.add("61c0c5a71d1f82001bdaa");
         createOrderBodyWithWrongIngredients.setIngredients(wrongIngredients);
 
-        email = "test" + new Random().nextInt(1000) +"@mail.ru";
+        email = generateRandomEmail();
         password = "Password";
 
         CreateUserBodyData bodyCreateUser = new CreateUserBodyData(email, password, "Ivan");
@@ -49,6 +50,7 @@ public class CreateOrderTest {
                 .getAccessToken()
                 .substring(7);
     }
+
     @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown(){

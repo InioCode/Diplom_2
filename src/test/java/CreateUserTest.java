@@ -14,10 +14,9 @@ import org.junit.Test;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static client.DeleteUser.deleteUser;
-import static client.createuser.CreateUser.createUser;
+import static client.createuser.CreateUser.*;
 
 public class CreateUserTest {
 
@@ -26,12 +25,11 @@ public class CreateUserTest {
     private String userName;
     private String password;
     private String accessToken;
-    private boolean userCreated = false;
 
     @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
-        email = "test" + new Random().nextInt(1000) +"@mail.ru";
+        email = generateRandomEmail();
         userName = "User";
         password = "Password";
 
@@ -51,7 +49,7 @@ public class CreateUserTest {
     public void createUniqueUser_success(){
         Response response = createUser(userBodyData);
         response.then().statusCode(200);
-        userCreated = true;
+        //userCreated = true;
         accessToken = response.as(SuccessRegisterUserData.class).getAccessToken().substring(7);
     }
 
@@ -59,7 +57,6 @@ public class CreateUserTest {
     @Test
     public void createNonUniqueUserReturn403(){
         Response response = createUser(userBodyData);
-        userCreated =true;
         accessToken = response.as(SuccessRegisterUserData.class).getAccessToken().substring(7);
 
         createUser(userBodyData).then().statusCode(403);
