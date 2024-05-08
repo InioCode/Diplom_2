@@ -1,5 +1,7 @@
 import client.getuserorders.GetUserOrders;
 import client.getuserorders.GetUserOrdersError;
+import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
 import client.createuser.CreateUserBodyData;
 import client.createuser.SuccessRegisterUserData;
@@ -17,6 +19,7 @@ public class GetUserOrdersTest {
     private String password;
     private String accessToken;
 
+    @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
         email = "test" + new Random().nextInt(1000) +"@mail.ru";
@@ -28,12 +31,13 @@ public class GetUserOrdersTest {
                 .getAccessToken()
                 .substring(7);
     }
-
+    @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown(){
             deleteUser(accessToken);
     }
 
+    @DisplayName("Запрос заказов с аутантификацие возвращает код 200")
     @Test
     public void getUserOrdersWithAuth(){
         GetUserOrders.getUserOrdersWithAuth(accessToken)
@@ -41,6 +45,7 @@ public class GetUserOrdersTest {
                 .statusCode(200);
     }
 
+    @DisplayName("Запрос заказов с аутантификацие возвращает код 200")
     @Test
     public void getUserOrdersWithoutAuth(){
         GetUserOrdersError error = GetUserOrders.getUserOrdersWithoutAuth().as(GetUserOrdersError.class);

@@ -1,4 +1,6 @@
 import client.loginuser.LoginUserBodyData;
+import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +22,7 @@ public class LoginUserTest {
     private String password;
     private String accessToken;
 
+    @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
         email = "test" + new Random().nextInt(1000) +"@mail.ru";
@@ -35,15 +38,17 @@ public class LoginUserTest {
         login = new LoginUserBodyData(email, password);
     }
 
+    @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown(){
         deleteUser(accessToken);
     }
-
+    @DisplayName("Успешный вход возвращает код 200")
     @Test
     public void loginUser_success(){
         loginUser(login).then().log().all().statusCode(200);
     }
+    @DisplayName("Вход с неверным логином возвращает код 401")
     @Test
     public void loginUserWithInvalidUserName(){
         loginUser(invalidLogin).then().statusCode(401);

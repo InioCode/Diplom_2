@@ -1,6 +1,7 @@
 import client.changeuser.ChangeUserError;
 import client.createuser.CreateUserBodyData;
 import client.createuser.SuccessRegisterUserData;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.*;
@@ -19,6 +20,7 @@ public class ChangeUserDataTest {
     private String password;
     private String accessToken;
 
+    @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
         int randInt = new Random().nextInt(1000);
@@ -35,7 +37,7 @@ public class ChangeUserDataTest {
 
         //System.out.println(email);
     }
-
+    @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown(){
         deleteUser(accessToken);

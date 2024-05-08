@@ -1,6 +1,7 @@
 import client.createorder.CreateOrderBodyData;
 import client.createorder.CreateOrderError;
 import client.createorder.GetIngredientsData;
+import io.qameta.allure.Step;
 import org.junit.After;
 import client.createuser.CreateUserBodyData;
 import client.createuser.SuccessRegisterUserData;
@@ -33,7 +34,7 @@ public class CreateOrderTest {
     private String accessToken;
     private GetIngredientsData ingredientsList;
 
-
+    @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
         //RestAssured.baseURI = BASE_URL;
@@ -71,7 +72,7 @@ public class CreateOrderTest {
 
         login = new LoginUserBodyData(email, password);
     }
-
+    @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown(){
         deleteUser(accessToken);

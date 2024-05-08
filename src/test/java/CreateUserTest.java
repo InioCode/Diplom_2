@@ -1,6 +1,9 @@
 import client.createuser.CreateUserBodyData;
 import client.createuser.CreateUserError;
 import client.createuser.SuccessRegisterUserData;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
@@ -8,6 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static client.DeleteUser.deleteUser;
@@ -22,7 +28,7 @@ public class CreateUserTest {
     private String accessToken;
     private boolean userCreated = false;
 
-
+    @Step("Выполение создания нового пользователя")
     @Before
     public void setUp(){
         email = "test" + new Random().nextInt(1000) +"@mail.ru";
@@ -32,6 +38,7 @@ public class CreateUserTest {
         userBodyData = new CreateUserBodyData(email, password, userName);
     }
 
+    @Step("Выполнение удаления созданого пользователя")
     @After
     public void tearDown() {
         if (userCreated){
@@ -61,8 +68,15 @@ public class CreateUserTest {
     @DisplayName("Создание пользователя без одного поля возвращает код 403")
     @Test
     public void createUserWithoutOneFieldReturn403(){
-        String userBodyWithoutOneField = "{\"email\":\"test@mail.ru\",\"password\":\"User\"}";
-        CreateUserError error = createUser(userBodyWithoutOneField).as(CreateUserError.class);
+        Map<String, String> userBodyWithoutOneField = new HashMap<>();
+        userBodyWithoutOneField.put("email", "test@mail.ru");
+        userBodyWithoutOneField.put("password", "Password");
+
+        Gson gson = new Gson();
+        Type typeObject = new TypeToken<HashMap>() {}.getType();
+        String json = gson.toJson(userBodyWithoutOneField, typeObject);
+
+        CreateUserError error = createUser(json).as(CreateUserError.class);
         Assert.assertEquals("false", error.getSuccess());
         Assert.assertEquals("Email, password and name are required fields", error.getMessage());
     }
